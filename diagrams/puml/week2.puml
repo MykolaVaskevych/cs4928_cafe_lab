@@ -1,0 +1,84 @@
+@startuml
+
+interface com.cafepos.catalog.Catalog {
+	{method}  {abstract} +add ( paramProduct1 : com.cafepos.catalog.Product ) : void
+	{method}  {abstract} +findById ( paramString1 : String ) : java.util.Optional
+}
+
+
+class com.cafepos.catalog.InMemoryCatalog {
+	{method} +add ( paramProduct1 : com.cafepos.catalog.Product ) : void
+	{method} +findById ( paramString1 : String ) : java.util.Optional
+}
+
+
+interface com.cafepos.catalog.Product {
+	{method}  {abstract} +basePrice () : com.cafepos.common.Money
+	{method}  {abstract} +id () : String
+	{method}  {abstract} +name () : String
+}
+
+
+class com.cafepos.catalog.SimpleProduct {
+	{field} -id : String
+	{field} -name : String
+	{method} +basePrice () : com.cafepos.common.Money
+	{method} +id () : String
+	{method} +name () : String
+}
+
+
+class com.cafepos.common.Money {
+	{field} -amount : java.math.BigDecimal
+	{method} +add ( paramMoney1 : com.cafepos.common.Money ) : com.cafepos.common.Money
+	{method} +compareTo ( paramMoney1 : com.cafepos.common.Money ) : int
+	{method} +equals ( paramObject1 : Object ) : boolean
+	{method} +hashCode () : int
+	{method} +multiply ( paramint1 : int ) : com.cafepos.common.Money
+	{method}  {static} +of ( paramdouble1 : double ) : com.cafepos.common.Money
+	{method} +toString () : String
+	{method}  {static} +zero () : com.cafepos.common.Money
+}
+
+
+class com.cafepos.demo.Week2Demo {
+	{method}  {static} +main ( paramString;1 : [Ljava.lang.String; ) : void
+}
+
+
+class com.cafepos.domain.LineItem {
+	{field} -quantity : int
+	{method} +lineTotal () : com.cafepos.common.Money
+	{method} +product () : com.cafepos.catalog.Product
+	{method} +quantity () : int
+}
+
+
+class com.cafepos.domain.Order {
+	{field} -id : long
+	{method} +addItem ( paramLineItem1 : com.cafepos.domain.LineItem ) : void
+	{method} +id () : long
+	{method} +items () : java.util.List
+	{method} +subtotal () : com.cafepos.common.Money
+	{method} +taxAtPercent ( paramint1 : int ) : com.cafepos.common.Money
+	{method} +totalWithTax ( paramint1 : int ) : com.cafepos.common.Money
+}
+
+
+class com.cafepos.domain.OrderIds {
+	{field} {static} -counter : java.util.concurrent.atomic.AtomicLong
+	{method}  {static} +next () : long
+}
+
+
+
+
+com.cafepos.catalog.InMemoryCatalog "1" o-- "0..*"  com.cafepos.catalog.Product : byId
+com.cafepos.catalog.InMemoryCatalog ..|>  com.cafepos.catalog.Catalog
+com.cafepos.catalog.SimpleProduct *--  com.cafepos.common.Money : basePrice
+com.cafepos.catalog.SimpleProduct ..|>  com.cafepos.catalog.Product
+com.cafepos.domain.LineItem *--  com.cafepos.catalog.Product : product
+com.cafepos.domain.Order "1" o-- "0..*"  com.cafepos.domain.LineItem : items
+
+
+@enduml
