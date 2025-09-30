@@ -1,6 +1,7 @@
 package com.cafepos.domain;
 
 import com.cafepos.common.Money;
+import com.cafepos.payment.PaymentStrategy;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -50,5 +51,12 @@ public final class Order {
 
   public Money totalWithTax(int percent) {
     return subtotal().add(taxAtPercent(percent));
+  }
+
+  public void pay(PaymentStrategy strategy) {
+    if (strategy == null) {
+      throw new IllegalArgumentException("strategy required");
+    }
+    strategy.pay(this);
   }
 }
