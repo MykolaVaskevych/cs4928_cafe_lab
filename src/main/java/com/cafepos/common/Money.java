@@ -52,6 +52,17 @@ public final class Money implements Comparable<Money> {
     return new Money(this.amount.multiply(new BigDecimal(quantity)));
   }
 
+  public Money subtract(Money other) {
+    if (other == null) {
+      throw new IllegalArgumentException("subtract(Money other) -> other cant be null");
+    }
+    BigDecimal result = this.amount.subtract(other.amount);
+    if (result.compareTo(BigDecimal.ZERO) < 0) {
+      throw new IllegalArgumentException("result cant be negative");
+    }
+    return new Money(result);
+  }
+
   @Override
   public int compareTo(Money other) {
     return this.amount.compareTo(other.amount);
