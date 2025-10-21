@@ -38,6 +38,14 @@ public final class Money implements Comparable<Money> {
     return new Money(BigDecimal.ZERO);
   }
 
+  public static Money of(BigDecimal value) {
+    return new Money(value);
+  }
+
+  public BigDecimal asBigDecimal() {
+    return amount;
+  }
+
   public Money add(Money other) {
     if (other == null) {
       throw new IllegalArgumentException("add(Money other) -> other cant be null");
