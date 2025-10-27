@@ -18,7 +18,6 @@ public final class InteractiveCLI {
     private static final Scanner scanner = new Scanner(System.in);
     private static final ProductFactory factory = new ProductFactory();
     private static final TaxPolicy taxPolicy = new FixedRateTaxPolicy(10);
-    private static final ReceiptPrinter receiptPrinter = new ReceiptPrinter();
 
     public static void main(String[] args) {
 
@@ -215,24 +214,14 @@ public final class InteractiveCLI {
             PricingService pricingService = new PricingService(discountPolicy, taxPolicy);
             PricingResult pricingResult = pricingService.price(order.subtotal());
 
-            // Show receipt with discount applied
+            // Show pricing summary
             System.out.println("\n========================================");
-            System.out.println("         Final Receipt");
-            System.out.println("========================================");
-            System.out.println("Order #" + order.id());
-            for (LineItem item : order.items()) {
-                System.out.printf(" - %s x%d = %s%n",
-                    item.product().name(),
-                    item.quantity(),
-                    item.lineTotal());
-            }
-            System.out.println("----------------------------------------");
             System.out.println("Subtotal: " + pricingResult.subtotal());
             if (pricingResult.discount().asBigDecimal().signum() > 0) {
                 System.out.println("Discount: -" + pricingResult.discount());
             }
             System.out.println("Tax (" + taxPolicy.getPercent() + "%): " + pricingResult.tax());
-            System.out.println("Total: " + pricingResult.total());
+            System.out.println("Total to pay: " + pricingResult.total());
             System.out.println("========================================");
 
             // Choose payment method
