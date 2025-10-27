@@ -210,6 +210,31 @@ public final class InteractiveCLI {
                 return false;
             }
 
+            // Apply discount
+            DiscountPolicy discountPolicy = selectDiscountPolicy();
+            PricingService pricingService = new PricingService(discountPolicy, taxPolicy);
+            PricingResult pricingResult = pricingService.price(order.subtotal());
+
+            // Show receipt with discount applied
+            System.out.println("\n========================================");
+            System.out.println("         Final Receipt");
+            System.out.println("========================================");
+            System.out.println("Order #" + order.id());
+            for (LineItem item : order.items()) {
+                System.out.printf(" - %s x%d = %s%n",
+                    item.product().name(),
+                    item.quantity(),
+                    item.lineTotal());
+            }
+            System.out.println("----------------------------------------");
+            System.out.println("Subtotal: " + pricingResult.subtotal());
+            if (pricingResult.discount().asBigDecimal().signum() > 0) {
+                System.out.println("Discount: -" + pricingResult.discount());
+            }
+            System.out.println("Tax (" + taxPolicy.getPercent() + "%): " + pricingResult.tax());
+            System.out.println("Total: " + pricingResult.total());
+            System.out.println("========================================");
+
             // Choose payment method
             System.out.println("\n--- Payment Method ---");
             System.out.println("1. Cash");
@@ -224,7 +249,7 @@ public final class InteractiveCLI {
                 return false; // User chose to go back
             }
 
-            Money totalAmount = order.totalWithTax(10);
+            Money totalAmount = pricingResult.total();
             PaymentStrategy paymentStrategy;
             switch (paymentChoice) {
                 case 1 -> {
