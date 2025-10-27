@@ -344,6 +344,30 @@ public final class InteractiveCLI {
         return true;
     }
 
+    private static DiscountPolicy selectDiscountPolicy() {
+        System.out.println("\n--- Apply Discount? ---");
+        System.out.println("1. No discount");
+        System.out.println("2. Loyalty discount (5%)");
+        System.out.println("3. Loyalty discount (10%)");
+        System.out.println("4. Fixed coupon ($1.00)");
+        System.out.println("5. Fixed coupon ($2.00)");
+        System.out.print("Choose discount: ");
+
+        int choice = getIntInput();
+
+        return switch (choice) {
+            case 1 -> new NoDiscount();
+            case 2 -> new LoyaltyPercentDiscount(5);
+            case 3 -> new LoyaltyPercentDiscount(10);
+            case 4 -> new FixedCouponDiscount(Money.of(1.00));
+            case 5 -> new FixedCouponDiscount(Money.of(2.00));
+            default -> {
+                System.out.println("\n[INFO] Invalid choice, applying no discount.");
+                yield new NoDiscount();
+            }
+        };
+    }
+
     private static int getIntInput() {
         try {
             int value = scanner.nextInt();
