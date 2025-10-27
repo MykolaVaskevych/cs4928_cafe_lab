@@ -6,7 +6,6 @@ import java.util.InputMismatchException;
 // cafepos
 import com.cafepos.domain.*;
 import com.cafepos.factory.ProductFactory;
-import com.cafepos.decorator.*;
 import com.cafepos.catalog.*;
 import com.cafepos.common.Money;
 import com.cafepos.payment.*;
