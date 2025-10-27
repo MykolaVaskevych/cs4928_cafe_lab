@@ -18,6 +18,7 @@ public final class InteractiveCLI {
     private static final Scanner scanner = new Scanner(System.in);
     private static final ProductFactory factory = new ProductFactory();
     private static final TaxPolicy taxPolicy = new FixedRateTaxPolicy(10);
+    private static final ReceiptPrinter receiptPrinter = new ReceiptPrinter();
 
     public static void main(String[] args) {
 
@@ -216,13 +217,8 @@ public final class InteractiveCLI {
 
             // Show pricing summary
             System.out.println("\n========================================");
-            System.out.println("Subtotal: " + pricingResult.subtotal());
-            if (pricingResult.discount().asBigDecimal().signum() > 0) {
-                System.out.println("Discount: -" + pricingResult.discount());
-            }
-            System.out.println("Tax (" + taxPolicy.getPercent() + "%): " + pricingResult.tax());
-            System.out.println("Total to pay: " + pricingResult.total());
-            System.out.println("========================================");
+            System.out.print(receiptPrinter.formatPricing(pricingResult, taxPolicy.getPercent()));
+            System.out.println("\n========================================");
 
             // Choose payment method
             System.out.println("\n--- Payment Method ---");
@@ -297,13 +293,8 @@ public final class InteractiveCLI {
                     item.lineTotal());
             }
             System.out.println("----------------------------------------");
-            System.out.println("Subtotal: " + pricingResult.subtotal());
-            if (pricingResult.discount().asBigDecimal().signum() > 0) {
-                System.out.println("Discount: -" + pricingResult.discount());
-            }
-            System.out.println("Tax (" + taxPolicy.getPercent() + "%): " + pricingResult.tax());
-            System.out.println("Total: " + pricingResult.total());
-            System.out.println("========================================");
+            System.out.print(receiptPrinter.formatPricing(pricingResult, taxPolicy.getPercent()));
+            System.out.println("\n========================================");
             System.out.println("  Payment successful! Order complete.");
             System.out.println("========================================");
             return true;

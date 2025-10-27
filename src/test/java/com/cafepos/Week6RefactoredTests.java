@@ -162,6 +162,38 @@ public class Week6RefactoredTests {
     assertTrue(receipt.contains("Total: 11.00"));
   }
 
+  @Test
+  void receipt_printer_format_pricing_with_discount() {
+    ReceiptPrinter printer = new ReceiptPrinter();
+    PricingResult pr = new PricingResult(
+        Money.of(7.80),
+        Money.of(0.39),
+        Money.of(0.74),
+        Money.of(8.15)
+    );
+    String pricing = printer.formatPricing(pr, 10);
+    assertTrue(pricing.contains("Subtotal: 7.80"));
+    assertTrue(pricing.contains("Discount: -0.39"));
+    assertTrue(pricing.contains("Tax (10%): 0.74"));
+    assertTrue(pricing.contains("Total: 8.15"));
+  }
+
+  @Test
+  void receipt_printer_format_pricing_without_discount() {
+    ReceiptPrinter printer = new ReceiptPrinter();
+    PricingResult pr = new PricingResult(
+        Money.of(10.00),
+        Money.of(0.00),
+        Money.of(1.00),
+        Money.of(11.00)
+    );
+    String pricing = printer.formatPricing(pr, 10);
+    assertFalse(pricing.contains("Discount:"));
+    assertTrue(pricing.contains("Subtotal: 10.00"));
+    assertTrue(pricing.contains("Tax (10%): 1.00"));
+    assertTrue(pricing.contains("Total: 11.00"));
+  }
+
   // ========== CheckoutService Integration Tests ==========
 
   @Test
