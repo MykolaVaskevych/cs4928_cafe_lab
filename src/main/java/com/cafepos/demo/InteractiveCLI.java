@@ -11,11 +11,14 @@ import com.cafepos.catalog.*;
 import com.cafepos.common.Money;
 import com.cafepos.payment.*;
 import com.cafepos.observer.*;
+import com.cafepos.pricing.*;
 
 public final class InteractiveCLI {
 
     private static final Scanner scanner = new Scanner(System.in);
     private static final ProductFactory factory = new ProductFactory();
+    private static final TaxPolicy taxPolicy = new FixedRateTaxPolicy(10);
+    private static final ReceiptPrinter receiptPrinter = new ReceiptPrinter();
 
     public static void main(String[] args) {
 
@@ -191,8 +194,8 @@ public final class InteractiveCLI {
             }
             System.out.println("----------------------------------------");
             System.out.println("Subtotal: " + order.subtotal());
-            System.out.println("Tax (10%): " + order.taxAtPercent(10));
-            System.out.println("Total: " + order.totalWithTax(10));
+            System.out.println("Tax (" + taxPolicy.getPercent() + "%): " + order.taxAtPercent(taxPolicy.getPercent()));
+            System.out.println("Total: " + order.totalWithTax(taxPolicy.getPercent()));
         }
         System.out.println("========================================");
     }
