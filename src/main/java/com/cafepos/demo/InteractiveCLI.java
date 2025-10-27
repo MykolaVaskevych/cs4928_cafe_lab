@@ -297,7 +297,24 @@ public final class InteractiveCLI {
             Thread.sleep(1000); // Simulate preparation time
             order.markReady();
 
+            // Print final receipt
             System.out.println("\n========================================");
+            System.out.println("      RECEIPT - Order #" + order.id());
+            System.out.println("========================================");
+            for (LineItem item : order.items()) {
+                System.out.printf(" - %s x%d = %s%n",
+                    item.product().name(),
+                    item.quantity(),
+                    item.lineTotal());
+            }
+            System.out.println("----------------------------------------");
+            System.out.println("Subtotal: " + pricingResult.subtotal());
+            if (pricingResult.discount().asBigDecimal().signum() > 0) {
+                System.out.println("Discount: -" + pricingResult.discount());
+            }
+            System.out.println("Tax (" + taxPolicy.getPercent() + "%): " + pricingResult.tax());
+            System.out.println("Total: " + pricingResult.total());
+            System.out.println("========================================");
             System.out.println("  Payment successful! Order complete.");
             System.out.println("========================================");
             return true;
