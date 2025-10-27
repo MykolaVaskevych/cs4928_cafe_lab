@@ -17,7 +17,7 @@ mvn exec:java -Dexec.mainClass="com.cafepos.demo.Week2Demo"
 
 ```bash
 mvn compile
-plantuml diagrams/puml/*.puml -o ../png
+plantuml -DPLANTUML_LIMIT_SIZE=16384 diagrams/puml/*.puml -o ../png
 # Output: diagrams/png/*.png
 ```
 

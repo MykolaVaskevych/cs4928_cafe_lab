@@ -1,4 +1,5 @@
 @startuml
+top to bottom direction
 
 interface com.cafepos.catalog.Catalog {
 	{method}  {abstract} +add ( paramProduct1 : com.cafepos.catalog.Product ) : void
