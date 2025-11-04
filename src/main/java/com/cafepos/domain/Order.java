@@ -31,6 +31,12 @@ public final class Order {
     notifyObservers("itemAdded");
   }
 
+  public void removeLastItem() {
+    if (!items.isEmpty()) {
+      items.remove(items.size() - 1);
+    }
+  }
+
   public List<LineItem> items() {
     return Collections.unmodifiableList(items);
   }
