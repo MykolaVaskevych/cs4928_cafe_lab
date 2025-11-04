@@ -1,0 +1,41 @@
+@startuml
+title Command Pattern - Button Press Flow
+
+actor Cashier
+participant "remote:PosRemote" as Remote
+participant "cmd:AddItemCommand" as Command
+participant "service:OrderService" as Service
+participant "factory:ProductFactory" as Factory
+participant "order:Order" as Order
+
+Cashier -> Remote: press(0)
+activate Remote
+
+Remote -> Remote: slots[0]
+Remote -> Command: execute()
+activate Command
+
+Command -> Service: addItem(recipe, qty)
+activate Service
+
+Service -> Factory: create(recipe)
+activate Factory
+Factory --> Service: product
+deactivate Factory
+
+Service -> Order: addItem(lineItem)
+activate Order
+Order --> Service
+deactivate Order
+
+Service --> Command
+deactivate Service
+
+Command --> Remote
+deactivate Command
+
+Remote -> Remote: history.push(cmd)
+Remote --> Cashier
+deactivate Remote
+
+@enduml
