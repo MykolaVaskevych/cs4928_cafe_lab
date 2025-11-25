@@ -211,20 +211,35 @@ Total: 12.12
 
 ```
 src/main/java/com/cafepos/
-├── ui/           (Presentation)
-├── app/          (Application)
-├── domain/       (Domain)
-└── infra/        (Infrastructure)
+├── ui/           (Presentation Layer)
+├── demo/         (Presentation Layer)
+├── app/          (Application Layer)
+├── domain/       (Domain Layer - core entities)
+├── command/      (Domain - Command pattern)
+├── state/        (Domain - State pattern)
+├── menu/         (Domain - Composite/Iterator)
+├── observer/     (Domain - Observer pattern)
+├── payment/      (Domain - Strategy pattern)
+├── pricing/      (Domain - business logic)
+├── factory/      (Domain - Factory pattern)
+├── catalog/      (Domain - product catalog)
+├── decorator/    (Domain - Decorator pattern)
+├── common/       (Shared utilities)
+├── infra/        (Infrastructure Layer)
+├── printing/     (Infrastructure - adapters)
+├── checkout/     (Cross-cutting)
+└── smells/       (Legacy code - Week 7)
 ```
 
 **What to Say:**
-> "Our system follows a clean **4-layer architecture**. Let me walk you through it. At the top, the **Presentation layer** contains UI components—the OrderController and ConsoleView we just saw. Below that, the **Application layer** has our use cases like CheckoutService and ReceiptFormatter. These orchestrate domain operations without doing I/O. The **Domain layer** is the core—Order, LineItem, state machines, and repository interfaces live here. It has zero dependencies on other layers. Finally, the **Infrastructure layer** contains adapters—InMemoryOrderRepository implements the domain's repository interface, and the Wiring class acts as our dependency injection container. This architecture follows the Dependency Inversion Principle—dependencies point inward toward the domain."
+> "Our system follows a clean **4-layer architecture** organized across 18 packages. At the top, the **Presentation layer** contains OrderController, ConsoleView, and demo classes. The **Application layer** has CheckoutService and ReceiptFormatter—orchestrating domain operations without I/O. The **Domain layer** is the largest—we organized it by pattern: separate packages for command, state, menu, observer, payment, pricing, and factory. This makes patterns easy to find. The **Infrastructure layer** has InMemoryOrderRepository and Wiring for dependency injection. All dependencies point inward to the domain—that's the Dependency Inversion Principle in action."
 
 **Screen Sequence:**
 ```
 1. Show diagram with 4 colored layers
-2. Zoom into packages showing clear separation
+2. Scroll through actual package structure showing 18 packages
 3. Point to dependency arrows (all pointing to domain)
+4. Highlight how domain/ + command/ + state/ + menu/ etc. are all Domain layer
 ```
 
 ---
