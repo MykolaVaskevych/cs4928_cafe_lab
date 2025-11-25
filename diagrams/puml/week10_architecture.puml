@@ -1,0 +1,113 @@
+@startuml
+title Café POS - Layered Architecture (Week 10)
+
+skinparam packageStyle rectangle
+skinparam component {
+  BackgroundColor<<presentation>> LightBlue
+  BackgroundColor<<application>> LightGreen
+  BackgroundColor<<domain>> Yellow
+  BackgroundColor<<infrastructure>> LightGray
+  BorderColor Black
+  ArrowColor Black
+}
+
+package "Presentation Layer" <<presentation>> {
+  [OrderController] as OrderController
+  [ConsoleView] as ConsoleView
+  [InteractiveCLI] as CLI
+  [EventWiringDemo] as EventDemo
+  [Week Demos] as Demos
+}
+
+package "Application Layer" <<application>> {
+  [CheckoutService] as AppCheckout
+  [ReceiptFormatter] as ReceiptFormatter
+  [EventBus] as EventBus
+  [OrderEvent] as Events
+}
+
+package "Domain Layer" <<domain>> {
+  [Order] as Order
+  [LineItem] as LineItem
+  [OrderRepository] as OrderRepo
+  [OrderFSM] as OrderFSM
+  [OrderIds] as OrderIds
+  [Product] as Product
+  [SimpleProduct] as SimpleProduct
+  [Catalog] as Catalog
+  [PaymentStrategy] as PaymentStrategy
+  [CardPayment] as CardPayment
+  [CashPayment] as CashPayment
+  [WalletPayment] as WalletPayment
+  [MenuComponent] as MenuComponent
+  [Menu] as Menu
+  [MenuItem] as MenuItem
+  [CompositeIterator] as CompositeIterator
+}
+
+package "Infrastructure Layer" <<infrastructure>> {
+  [InMemoryOrderRepository] as InMemoryRepo
+  [InMemoryCatalog] as InMemoryCatalog
+  [Wiring] as Wiring
+  [LegacyPrinterAdapter] as PrinterAdapter
+}
+
+package "Cross-Cutting" {
+  [PricingService] as PricingService
+  [DiscountPolicy] as DiscountPolicy
+  [TaxPolicy] as TaxPolicy
+  [ProductFactory] as ProductFactory
+  [ProductDecorator] as ProductDecorator
+  [Commands] as Commands
+}
+
+' Presentation -> Application
+OrderController --> AppCheckout
+OrderController --> OrderRepo
+ConsoleView ..> AppCheckout
+CLI --> ProductFactory
+EventDemo --> EventBus
+Demos --> Wiring
+
+' Application -> Domain
+AppCheckout --> OrderRepo
+AppCheckout --> PricingService
+ReceiptFormatter --> LineItem
+EventBus --> Events
+
+' Domain relationships
+Order --> LineItem
+Order --> OrderRepo
+LineItem --> Product
+Product <|.. SimpleProduct
+Product <|.. ProductDecorator
+PaymentStrategy <|.. CardPayment
+PaymentStrategy <|.. CashPayment
+PaymentStrategy <|.. WalletPayment
+MenuComponent <|-- Menu
+MenuComponent <|-- MenuItem
+Menu --> CompositeIterator
+Order --> OrderFSM
+
+' Infrastructure -> Domain
+InMemoryRepo ..|> OrderRepo
+InMemoryCatalog ..|> Catalog
+Wiring --> InMemoryRepo
+Wiring --> AppCheckout
+
+' Support components
+PricingService --> DiscountPolicy
+PricingService --> TaxPolicy
+ProductFactory --> Product
+ProductFactory --> ProductDecorator
+Commands --> Order
+
+note as LayerNote
+**Layer Dependencies:**
+• Presentation → Application, Domain
+• Application → Domain
+• Domain → No dependencies
+• Infrastructure → Domain (implements)
+end note
+
+@enduml
